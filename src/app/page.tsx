@@ -25,7 +25,7 @@ export default function Home() {
   const [activePersona, setActivePersona] = useState(null);
   const [showPersonaBubble, setShowPersonaBubble] = useState(false);
 
-  const toggleWindow = (windowName) => {
+  const toggleWindow = (windowName: any) => {
     setOpenWindows(prev => ({
       ...prev,
       [windowName]: !prev[windowName]
