@@ -22,23 +22,24 @@ export default function Home() {
   });
   const [isInverted, setIsInverted] = useState(false);
   const [showStartMenu, setShowStartMenu] = useState(false);
-  const [activePersona, setActivePersona] = useState(null);
+  const [activePersona, setActivePersona] = useState<any>(null);
   const [showPersonaBubble, setShowPersonaBubble] = useState(false);
 
   // @ts-ignore
   const toggleWindow = (windowName: any) => {
-    setOpenWindows(prev => ({
+    setOpenWindows((prev: any) => ({
       ...prev,
+      // @ts-ignore
       [windowName]: !prev[windowName]
     }));
-  };
+};
 
   const handleEnter = () => {
     setIsLoggedIn(true);
   };
 
   // 处理角色选择
-  const handlePersonaSelect = (persona) => {
+  const handlePersonaSelect = (persona: any) => {
     setActivePersona(persona);
   };
 

@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 
-const Window = ({ title, content, isOpen, onClose, onMinimize, position, style }) => {
+const Window = ({ title, content, isOpen, onClose, onMinimize = () => {}, position = { x: 0, y: 0 }, style = {} }) => {
   if (!isOpen) return null;
 
   // 计算默认居中位置
