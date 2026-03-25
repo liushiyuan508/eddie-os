@@ -1,0 +1,299 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: none;
+  font-smooth: never;
+}
+
+body {
+  font-family: 'Tahoma', 'MS Sans Serif', 'system-ui', sans-serif;
+  background-color: #008080;
+  color: #000000;
+  overflow: hidden;
+  position: relative;
+  height: 100vh;
+}
+
+/* 数字噪点背景 */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.05;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* 扫描线效果 */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.03),
+    rgba(0, 0, 0, 0.03) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* 桌面图标 */
+.desktop-icon {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  margin: 16px;
+  z-index: 10;
+}
+
+.icon-image {
+  width: 48px;
+  height: 48px;
+  background-color: #FFFFFF;
+  border: 2px solid #000000;
+  position: relative;
+  margin-bottom: 8px;
+  box-shadow: 4px 4px 0px #000000;
+}
+
+.icon-label {
+  font-size: 12px;
+  color: #FFFFFF;
+  text-shadow: 1px 1px 0px #000000;
+  text-align: center;
+  width: 100%;
+  word-wrap: break-word;
+}
+
+/* 视窗样式 */
+.window {
+  position: fixed;
+  background-color: #F0F0F0;
+  border: 2px solid #000000;
+  box-shadow: 4px 4px 0px #000000;
+  z-index: 100;
+}
+
+/* 桌面小人动画 */
+@keyframes personaPatrol {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(10px);
+  }
+  75% {
+    transform: translateX(-10px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.persona-animation {
+  animation: personaPatrol 5s infinite ease-in-out;
+}
+
+/* 关机淡出效果 */
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.fade-out {
+  animation: fadeOut 1s ease-in-out forwards;
+}
+
+.window-bar {
+  background-color: #C0C0C0;
+  border-bottom: 2px solid #000000;
+  padding: 4px 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: move;
+}
+
+.window-title {
+  font-size: 12px;
+  color: #000000;
+}
+
+.window-button {
+  background-color: #FFFFFF;
+  border: 2px solid #000000;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: bold;
+  box-shadow: 2px 2px 0px #000000;
+}
+
+.window-content {
+  padding: 16px;
+  font-size: 14px;
+  line-height: 1.4;
+  height: calc(100% - 32px);
+  overflow-y: auto;
+}
+
+/* 自定义滚动条 */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 12px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  border: 2px solid #000000;
+  background: #FFFFFF;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #000000;
+  border: none;
+}
+
+/* 等宽数码字 */
+.monospace {
+  font-family: 'Courier New', monospace;
+}
+
+/* 十字坐标符样式 */
+.crosshair {
+  position: fixed;
+  width: 16px;
+  height: 16px;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+.crosshair::before,
+.crosshair::after {
+  content: '';
+  position: absolute;
+  background-color: #000000;
+}
+
+.crosshair::before {
+  width: 100%;
+  height: 2px;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+}
+
+.crosshair::after {
+  width: 2px;
+  height: 100%;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* 自定义光标 */
+.custom-cursor {
+  position: fixed;
+  width: 20px;
+  height: 24px;
+  background: black;
+  clip-path: polygon(0 0, 100% 0, 100% 80%, 80% 80%, 80% 100%, 60% 80%, 0 80%);
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-10px, -12px);
+}
+
+/* 全屏滚动容器 */
+.snap-container {
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+
+.snap-section {
+  height: 100vh;
+  position: absolute;
+  width: 100%;
+  top: 0;
+  left: 0;
+}
+
+/* 无圆角样式 */
+.no-rounded {
+  border-radius: 0 !important;
+}
+
+/* 垂直旋转标题 */
+.vertical-title {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+}
+
+/* 背景反色效果 */
+body.inverted {
+  background-color: #000000 !important;
+  color: #FFFFFF !important;
+}
+
+body.inverted .window {
+  background-color: #111111 !important;
+  color: #FFFFFF !important;
+}
+
+body.inverted .window-bar {
+  background-color: #333333 !important;
+  color: #FFFFFF !important;
+}
+
+body.inverted .desktop-icon .icon-label {
+  color: #FFFFFF !important;
+  text-shadow: 1px 1px 0px #FFFFFF !important;
+}
+
+/* Web 1.0 按钮样式 */
+.web10-button {
+  background-color: #FFFFFF;
+  border: 2px solid #000000;
+  padding: 4px 8px;
+  font-family: 'Tahoma', 'MS Sans Serif', 'system-ui', sans-serif;
+  font-size: 12px;
+  cursor: pointer;
+  box-shadow: 2px 2px 0px #000000;
+  transition: all 0.1s ease;
+}
+
+.web10-button:hover {
+  background-color: #000000;
+  color: #FFFFFF;
+}
+
+.web10-button:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0px 0px 0px #000000;
+}
