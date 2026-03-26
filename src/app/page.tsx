@@ -24,9 +24,9 @@ export default function Home() {
   });
   const [isInverted, setIsInverted] = useState(false);
   const [showStartMenu, setShowStartMenu] = useState(false);
-  const [activePersona, setActivePersona] = useState(null);
+  const [activePersona, setActivePersona] = useState<{ image: string; name: string } | null>(null);
   const [showPersonaBubble, setShowPersonaBubble] = useState(false);
-  const [playerState, setPlayerState] = useState({ isPlaying: false, audioElement: null });
+  const [playerState, setPlayerState] = useState<{ isPlaying: boolean; audioElement: HTMLAudioElement | null }>({ isPlaying: false, audioElement: null });
   const [isPlayerMini, setIsPlayerMini] = useState(false);
 
   // @ts-ignore
@@ -319,8 +319,8 @@ export default function Home() {
               {/* 像素小人图片 */}
               <div className="h-40">
                 <img 
-                  src={activePersona.image} 
-                  alt={activePersona.name} 
+                  src={activePersona?.image || ''} 
+                  alt={activePersona?.name || 'Persona'}
                   className="h-full object-contain"
                   style={{ imageRendering: 'pixelated' }}
                 />
