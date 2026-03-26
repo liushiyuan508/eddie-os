@@ -9,6 +9,7 @@ import QzoneRetro from '../components/QzoneRetro';
 import PixelPet from '../components/PixelPet';
 import PersonaShow from '../components/PersonaShow';
 import MyComputer from '../components/MyComputer';
+import JumpGame from '../components/JumpGame';
 
 export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -19,11 +20,14 @@ export default function Home() {
     qzoneRetro: false,
     pixelPet: false,
     personaShow: false,
+    jumpGame: false,
   });
   const [isInverted, setIsInverted] = useState(false);
   const [showStartMenu, setShowStartMenu] = useState(false);
-  const [activePersona, setActivePersona] = useState<any>(null);
+  const [activePersona, setActivePersona] = useState(null);
   const [showPersonaBubble, setShowPersonaBubble] = useState(false);
+  const [playerState, setPlayerState] = useState({ isPlaying: false, audioElement: null });
+  const [isPlayerMini, setIsPlayerMini] = useState(false);
 
   // @ts-ignore
   const toggleWindow = (windowName: any) => {
@@ -82,7 +86,7 @@ export default function Home() {
       <Minesweeper onMineHit={handleMineHit} />
     ),
     player: (
-      <Player />
+      <Player playerState={playerState} setPlayerState={setPlayerState} />
     ),
     qzoneRetro: (
       <QzoneRetro />
@@ -92,6 +96,9 @@ export default function Home() {
     ),
     personaShow: (
       <PersonaShow onPersonaSelect={handlePersonaSelect} />
+    ),
+    jumpGame: (
+      <JumpGame />
     ),
   };
 
@@ -226,6 +233,20 @@ export default function Home() {
               </div>
               <div className="icon-label">[我的QQ秀.lnk]</div>
             </div>
+
+            {/* 跳格子游戏图标 */}
+            <div className="desktop-icon" onClick={() => toggleWindow('jumpGame')}>
+              <div className="icon-image">
+                <div className="w-full h-full flex items-center justify-center">
+                  <div className="w-3/4 h-3/4 relative">
+                    <div className="absolute inset-0 bg-[#98FB98] border border-black"></div>
+                    <div className="absolute bottom-1/4 left-1/4 w-1/2 h-1/4 bg-[#006400] border border-black"></div>
+                    <div className="absolute top-1/4 left-1/2 transform -translate-x-1/2 w-1/4 h-1/4 bg-[#FF4500] border border-black rounded-full"></div>
+                  </div>
+                </div>
+              </div>
+              <div className="icon-label">[跳格子.exe]</div>
+            </div>
           </div>
 
           {/* 视窗 */}
@@ -244,14 +265,16 @@ export default function Home() {
               onClose={() => toggleWindow('minesweeper')}
             />
 
-            <Window
-              title="Player"
-              content={windowContents.player}
-              isOpen={openWindows.player}
-              onClose={() => toggleWindow('player')}
-              onMinimize={() => toggleWindow('player')}
-              style={{ width: '320px', height: '568px', rounded: true, border: 'none', boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)' }}
-            />
+            {!isPlayerMini && (
+              <Window
+                title="Player"
+                content={windowContents.player}
+                isOpen={openWindows.player}
+                onClose={() => toggleWindow('player')}
+                onMinimize={() => setIsPlayerMini(true)}
+                style={{ width: '224px', height: '398px', rounded: true, border: 'none', boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)' }}
+              />
+            )}
 
             <Window
               title="我的空間"
@@ -274,6 +297,14 @@ export default function Home() {
               isOpen={openWindows.personaShow}
               onClose={() => toggleWindow('personaShow')}
               style={{ width: '600px', height: '400px' }}
+            />
+
+            <Window
+              title="跳格子游戏"
+              content={windowContents.jumpGame}
+              isOpen={openWindows.jumpGame}
+              onClose={() => toggleWindow('jumpGame')}
+              style={{ width: '350px', height: '500px' }}
             />
           </AnimatePresence>
 
@@ -304,6 +335,67 @@ export default function Home() {
             </motion.div>
           )}
           
+          {/* 迷你播放器 */}
+          {isPlayerMini && (
+            <div 
+              className="fixed bottom-12 right-4 bg-[#C0C0C0] border-2 border-black p-2 flex items-center gap-4 z-100"
+              style={{ height: '40px', minWidth: '300px' }}
+              onClick={() => setIsPlayerMini(false)}
+            >
+              {/* 左侧 iPod 图标 */}
+              <div className="w-8 h-8 flex items-center justify-center">
+                <div className="w-6 h-6 bg-gray-800 rounded-md flex items-center justify-center">
+                  <div className="w-2 h-2 bg-white rounded-full"></div>
+                </div>
+              </div>
+              
+              {/* 中间滚动文字 */}
+              <div className="flex-1 overflow-hidden">
+                <div className="animate-marquee whitespace-nowrap">
+                  正在播放：iPod Touch - [当前歌名]
+                </div>
+              </div>
+              
+              {/* 右侧控制按钮 */}
+              <div className="flex items-center gap-2">
+                <button 
+                  className="w-6 h-6 border-2 border-black bg-white flex items-center justify-center text-xs"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    // 上一首功能
+                  }}
+                >
+                  ⏮
+                </button>
+                <button 
+                  className="w-6 h-6 border-2 border-black bg-white flex items-center justify-center text-xs"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (playerState.audioElement) {
+                      if (playerState.isPlaying) {
+                        playerState.audioElement.pause();
+                      } else {
+                        playerState.audioElement.play();
+                      }
+                      setPlayerState({ ...playerState, isPlaying: !playerState.isPlaying });
+                    }
+                  }}
+                >
+                  {playerState.isPlaying ? '⏸' : '▶'}
+                </button>
+                <button 
+                  className="w-6 h-6 border-2 border-black bg-white flex items-center justify-center text-xs"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    // 下一首功能
+                  }}
+                >
+                  ⏭
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* 任务栏 */}
           <div className="fixed bottom-0 left-0 right-0 bg-[#C0C0C0] border-t-2 border-black z-50">
             <div className="flex justify-between items-center h-10 px-4">

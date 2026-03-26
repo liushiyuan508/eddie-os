@@ -127,6 +127,20 @@ body::after {
   animation: fadeOut 1s ease-in-out forwards;
 }
 
+/* 迷你播放器滚动文字动画 */
+@keyframes marquee {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 10s linear infinite;
+}
+
 .window-bar {
   background-color: #C0C0C0;
   border-bottom: 2px solid #000000;
